@@ -1,0 +1,20 @@
+{
+  "name": "lore-dev",
+  "description": "Development marketplace for the lore plugin",
+  "owner": {
+    "name": "Joe Jiang",
+    "email": "joejiang@nvidia.com"
+  },
+  "plugins": [
+    {
+      "name": "lore",
+      "description": "Turn your project's lived history into structured project memory",
+      "version": "0.1.0",
+      "source": "./",
+      "author": {
+        "name": "Joe Jiang",
+        "email": "joejiang@nvidia.com"
+      }
+    }
+  ]
+}
