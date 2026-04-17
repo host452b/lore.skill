@@ -29,7 +29,11 @@ if %ERRORLEVEL% equ 0 (
     exit /b %ERRORLEVEL%
 )
 
-exit /b 0
+REM No bash found on Windows - cannot run hook.
+REM The plugin still "works" but SessionStart context injection is skipped.
+echo run-hook.cmd: no bash available on PATH or in standard Git install locations >&2
+echo run-hook.cmd: SessionStart hook cannot run; install Git for Windows to enable >&2
+exit /b 1
 CMDBLOCK
 
 # Unix bash path
