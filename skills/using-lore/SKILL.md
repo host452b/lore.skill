@@ -1,6 +1,8 @@
 ---
 name: using-lore
 description: Use when starting any conversation on a project that has lore installed — establishes what lore is, the cooling-pipeline thesis, the 11 archetypes, the `lore:<skill>` naming convention, and when to proactively invoke lore skills.
+type: primer
+invocable: true
 ---
 
 <SUBAGENT-STOP>
