@@ -9,17 +9,17 @@ from pathlib import Path
 
 import yaml
 
-ARCHETYPES = {
+ARCHETYPES = frozenset({
     "journal", "codex", "try-failed-exp", "postmortem", "retro",
     "intent-log", "deprecation-tracker", "migration-guide",
     "api-changelog", "dependency-ledger", "release-notes",
-}
+})
 
-TIERS = {"live", "archive", "canon"}
+TIERS = frozenset({"live", "archive", "canon"})
 
 ID_RE = re.compile(r"^\d{4}-\d{2}-\d{2}-[a-z0-9][a-z0-9-]{1,60}$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-CROSS_REF_RE = re.compile(r"^\[\[[a-z][a-z-]*:\d{4}-\d{2}-\d{2}-[a-z0-9][a-z0-9-]*\]\]$")
+CROSS_REF_RE = re.compile(r"^\[\[[a-z][a-z-]*:\d{4}-\d{2}-\d{2}-[a-z0-9][a-z0-9-]{1,60}\]\]$")
 
 
 class ValidationError(Exception):
@@ -27,7 +27,10 @@ class ValidationError(Exception):
 
 
 def load_frontmatter(path: Path) -> dict:
-    text = path.read_text(encoding="utf-8")
+    try:
+        text = path.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        raise ValidationError(f"{path}: file not found")
     if not text.startswith("---\n"):
         raise ValidationError(f"{path}: missing YAML frontmatter (no leading '---')")
     end = text.find("\n---\n", 4)
@@ -35,8 +38,8 @@ def load_frontmatter(path: Path) -> dict:
         raise ValidationError(f"{path}: unterminated YAML frontmatter")
     try:
         return yaml.safe_load(text[4:end]) or {}
-    except yaml.YAMLError as e:
-        raise ValidationError(f"{path}: YAML parse error: {e}")
+    except (yaml.YAMLError, ValueError) as e:
+        raise ValidationError(f"{path}: YAML parse error (likely invalid date or malformed value): {e}")
 
 
 def validate(path: Path, fm: dict) -> list[str]:
@@ -75,10 +78,27 @@ def validate(path: Path, fm: dict) -> list[str]:
         errors.append(f"superseded_by {fm['superseded_by']!r} is not a valid cross-ref")
 
     if "id" in fm and "date" in fm:
-        if str(fm["id"]).startswith(str(fm["date"])) is False:
+        if not str(fm["id"]).startswith(str(fm["date"])):
             errors.append(
                 f"id {fm['id']!r} must begin with date {fm['date']!r}"
             )
+
+    # I-3: filename (minus .md) must equal id
+    if "id" in fm and path.stem != str(fm["id"]):
+        errors.append(
+            f"filename stem {path.stem!r} must equal id {fm['id']!r}"
+        )
+
+    # Task 6 main: path-vs-tier consistency
+    if "tier" in fm:
+        parts = path.parts
+        for segment in ("live", "archive", "canon"):
+            if segment in parts and fm["tier"] != segment:
+                errors.append(
+                    f"tier/directory mismatch: frontmatter says tier={fm['tier']!r} "
+                    f"but path contains /{segment}/"
+                )
+                break
 
     return errors
 
