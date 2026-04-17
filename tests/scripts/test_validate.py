@@ -38,11 +38,19 @@ def test_bad_id_format_fails():
 
 def test_tier_dir_mismatch_fails():
     r = run_validate(
-        FIXTURES / "invalid" / "tier-dir-mismatch" / "live" / "journal"
+        FIXTURES / "invalid" / "tier-dir-mismatch" / ".lore" / "live" / "journal"
         / "2026-04-17-labeled-canon.md"
     )
     assert r.returncode != 0
     assert "tier" in r.stderr.lower() or "directory" in r.stderr.lower()
+
+
+def test_tier_check_skipped_outside_dot_lore():
+    # The check only applies to files under a `.lore/<tier>/` layout.
+    # A directory named 'canon' outside a .lore tree should not trigger
+    # a false positive.
+    r = run_validate(FIXTURES / "valid" / "canon" / "2026-04-17-should-pass.md")
+    assert r.returncode == 0, r.stderr
 
 
 def test_filename_id_mismatch_fails():

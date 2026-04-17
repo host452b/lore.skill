@@ -90,15 +90,22 @@ def validate(path: Path, fm: dict) -> list[str]:
         )
 
     # Task 6 main: path-vs-tier consistency
+    # Only enforces tier<->directory agreement for records located under a
+    # `.lore/<tier>/...` layout. Records outside a `.lore/` tree are not
+    # subject to this check (they're likely fixtures or user-relocated files).
     if "tier" in fm:
         parts = path.parts
-        for segment in ("live", "archive", "canon"):
-            if segment in parts and fm["tier"] != segment:
+        try:
+            lore_idx = parts.index(".lore")
+        except ValueError:
+            lore_idx = -1
+        if lore_idx >= 0 and lore_idx + 1 < len(parts):
+            tier_segment = parts[lore_idx + 1]
+            if tier_segment in TIERS and tier_segment != fm["tier"]:
                 errors.append(
                     f"tier/directory mismatch: frontmatter says tier={fm['tier']!r} "
-                    f"but path contains /{segment}/"
+                    f"but path locates record under .lore/{tier_segment}/"
                 )
-                break
 
     return errors
 

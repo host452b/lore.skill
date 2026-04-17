@@ -27,7 +27,7 @@ An archetype can produce records at more than one tier (rare). Example: `api-cha
 
 ## Storage: directory and frontmatter must agree
 
-A record lives at `.lore/<tier>/<archetype>/<id>.md`. The `tier:` frontmatter field must match the directory. The `audit` skill enforces this; `scripts/validate.py` enforces it for any file whose path contains `/live/`, `/archive/`, or `/canon/`.
+A record lives at `.lore/<tier>/<archetype>/<id>.md`. The `tier:` frontmatter field must match the directory. The `audit` skill enforces this; `scripts/validate.py` enforces it for any file located under a `.lore/<tier>/` directory layout.
 
 ## Tier transitions
 
