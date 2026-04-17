@@ -1,0 +1,21 @@
+{
+  "name": "lore",
+  "description": "Turn your project's lived history into structured project memory. Timeline · checkpoint · recall · lore · legacy.",
+  "version": "0.1.0",
+  "author": {
+    "name": "host452b",
+    "email": ""
+  },
+  "homepage": "https://github.com/host452b/lore.skill",
+  "repository": "https://github.com/host452b/lore.skill",
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "changelog",
+    "adr",
+    "project-memory",
+    "dead-ends",
+    "try-failed-exp",
+    "knowledge-management"
+  ]
+}

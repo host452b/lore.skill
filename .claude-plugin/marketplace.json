@@ -1,0 +1,20 @@
+{
+  "name": "lore-dev",
+  "description": "Development marketplace for the lore plugin",
+  "owner": {
+    "name": "host452b",
+    "email": ""
+  },
+  "plugins": [
+    {
+      "name": "lore",
+      "description": "Turn your project's lived history into structured project memory",
+      "version": "0.1.0",
+      "source": "./",
+      "author": {
+        "name": "host452b",
+        "email": ""
+      }
+    }
+  ]
+}
