@@ -1,0 +1,107 @@
+#!/usr/bin/env python3
+"""Validate a lore record's YAML frontmatter against the core schema."""
+
+from __future__ import annotations
+import argparse
+import re
+import sys
+from pathlib import Path
+
+import yaml
+
+ARCHETYPES = {
+    "journal", "codex", "try-failed-exp", "postmortem", "retro",
+    "intent-log", "deprecation-tracker", "migration-guide",
+    "api-changelog", "dependency-ledger", "release-notes",
+}
+
+TIERS = {"live", "archive", "canon"}
+
+ID_RE = re.compile(r"^\d{4}-\d{2}-\d{2}-[a-z0-9][a-z0-9-]{1,60}$")
+DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+CROSS_REF_RE = re.compile(r"^\[\[[a-z][a-z-]*:\d{4}-\d{2}-\d{2}-[a-z0-9][a-z0-9-]*\]\]$")
+
+
+class ValidationError(Exception):
+    pass
+
+
+def load_frontmatter(path: Path) -> dict:
+    text = path.read_text(encoding="utf-8")
+    if not text.startswith("---\n"):
+        raise ValidationError(f"{path}: missing YAML frontmatter (no leading '---')")
+    end = text.find("\n---\n", 4)
+    if end < 0:
+        raise ValidationError(f"{path}: unterminated YAML frontmatter")
+    try:
+        return yaml.safe_load(text[4:end]) or {}
+    except yaml.YAMLError as e:
+        raise ValidationError(f"{path}: YAML parse error: {e}")
+
+
+def validate(path: Path, fm: dict) -> list[str]:
+    errors = []
+
+    for field in ("id", "type", "tier", "date", "title", "authors"):
+        if field not in fm:
+            errors.append(f"missing required field: {field}")
+
+    if "id" in fm and not ID_RE.match(str(fm["id"])):
+        errors.append(f"id format invalid (want YYYY-MM-DD-slug): {fm['id']!r}")
+
+    if "type" in fm and fm["type"] not in ARCHETYPES:
+        errors.append(f"type must be one of {sorted(ARCHETYPES)}; got {fm['type']!r}")
+
+    if "tier" in fm and fm["tier"] not in TIERS:
+        errors.append(f"tier must be one of {sorted(TIERS)}; got {fm['tier']!r}")
+
+    if "date" in fm and not DATE_RE.match(str(fm["date"])):
+        errors.append(f"date format invalid (want YYYY-MM-DD): {fm['date']!r}")
+
+    if "authors" in fm and not (isinstance(fm["authors"], list) and fm["authors"]):
+        errors.append("authors must be a non-empty list")
+
+    for ref_field in ("refs", "supersedes"):
+        if ref_field in fm:
+            val = fm[ref_field]
+            if not isinstance(val, list):
+                errors.append(f"{ref_field} must be a list")
+                continue
+            for r in val:
+                if not CROSS_REF_RE.match(str(r)):
+                    errors.append(f"{ref_field} entry {r!r} is not a valid cross-ref")
+
+    if "superseded_by" in fm and not CROSS_REF_RE.match(str(fm["superseded_by"])):
+        errors.append(f"superseded_by {fm['superseded_by']!r} is not a valid cross-ref")
+
+    if "id" in fm and "date" in fm:
+        if str(fm["id"]).startswith(str(fm["date"])) is False:
+            errors.append(
+                f"id {fm['id']!r} must begin with date {fm['date']!r}"
+            )
+
+    return errors
+
+
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description="Validate a lore record frontmatter.")
+    ap.add_argument("path", type=Path, help="Path to the .md record")
+    args = ap.parse_args(argv)
+
+    try:
+        fm = load_frontmatter(args.path)
+    except ValidationError as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        return 2
+
+    errors = validate(args.path, fm)
+    if errors:
+        for e in errors:
+            print(f"ERROR: {args.path}: {e}", file=sys.stderr)
+        return 1
+    print(f"OK: {args.path}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
