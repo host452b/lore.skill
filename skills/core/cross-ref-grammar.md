@@ -28,7 +28,7 @@ This spike was motivated by the decision recorded in
 [[codex:2026-01-04-postgres-primary-db]].
 ```
 
-Both forms are recognized by the `meta/link` skill, which cross-checks that:
+Both forms are recognized by the `lore:link` skill, which cross-checks that:
 - Every cited cross-ref resolves to an existing record.
 - Every prose cross-ref is also listed in `refs:` (so structural queries see it).
 - Every `supersedes` entry has a matching `superseded_by` on the other side.
@@ -54,4 +54,4 @@ No spaces inside the brackets. No nested brackets. No additional metadata (for t
 ## Validation
 
 - `scripts/validate.py` checks that frontmatter `refs`, `supersedes`, `superseded_by` entries are well-formed.
-- `meta/link` (future skill) checks that they *resolve* (i.e., the target file exists).
+- `lore:link` (future skill) checks that they *resolve* (i.e., the target file exists).

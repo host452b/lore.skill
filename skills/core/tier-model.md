@@ -14,7 +14,7 @@ Every lore record lives at one of three **tiers**. Tier expresses *temperature* 
 LIVE  ──── curate ────►  ARCHIVE  ──── distill ────►  CANON
 ```
 
-Information phase-transitions cold-ward over time. The `meta/promote` skill operates this pipeline:
+Information phase-transitions cold-ward over time. The `lore:promote` skill operates this pipeline:
 
 - Scans `live/journal/` for recurring patterns → suggests `canon/codex/` entries.
 - Scans `archive/postmortem/` for lessons → suggests `canon/codex/` or `canon/try-failed-exp/` entries.
@@ -27,13 +27,13 @@ An archetype can produce records at more than one tier (rare). Example: `api-cha
 
 ## Storage: directory and frontmatter must agree
 
-A record lives at `.lore/<tier>/<archetype>/<id>.md`. The `tier:` frontmatter field must match the directory. The `audit` skill enforces this; `scripts/validate.py` enforces it for any file located under a `.lore/<tier>/` directory layout.
+A record lives at `.lore/<tier>/<archetype>/<id>.md`. The `tier:` frontmatter field must match the directory. The `lore:audit` skill enforces this; `scripts/validate.py` enforces it for any file located under a `.lore/<tier>/` directory layout.
 
 ## Tier transitions
 
-**Cold-ward (live → archive → canon):** common, handled by `meta/promote`. Both the file location and the `tier:` field are updated atomically.
+**Cold-ward (live → archive → canon):** common, handled by `lore:promote`. Both the file location and the `tier:` field are updated atomically.
 
-**Hot-ward (canon → archive, archive → live):** rare, user-driven only. In v0.1 and v0.2, `promote` only moves records cold-ward; hot-ward motion requires a manual move + frontmatter edit + commit.
+**Hot-ward (canon → archive, archive → live):** rare, user-driven only. In v0.1 and v0.2, `lore:promote` only moves records cold-ward; hot-ward motion requires a manual move + frontmatter edit + commit.
 
 ## Why three tiers, not two or five
 

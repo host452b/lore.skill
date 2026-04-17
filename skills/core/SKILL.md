@@ -45,4 +45,4 @@ Every SKILL.md in the lore suite must:
 4. Specify its default tier (`live`/`archive`/`canon`) in SKILL.md frontmatter.
 5. Pass `scripts/validate.py` for any example records it publishes.
 
-Any divergence breaks interoperability with `meta/link`, `meta/audit`, and `meta/promote`.
+Any divergence breaks interoperability with `lore:link`, `lore:audit`, and `lore:promote`.
