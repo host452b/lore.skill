@@ -13,11 +13,11 @@ def run_validate(path):
     )
 
 def test_valid_minimal_passes():
-    r = run_validate(FIXTURES / "valid" / "minimal.md")
+    r = run_validate(FIXTURES / "valid" / "2026-04-17-first-record.md")
     assert r.returncode == 0, r.stderr
 
 def test_valid_full_passes():
-    r = run_validate(FIXTURES / "valid" / "full.md")
+    r = run_validate(FIXTURES / "valid" / "2026-04-17-adr-postgres-primary.md")
     assert r.returncode == 0, r.stderr
 
 def test_missing_id_fails():
@@ -34,3 +34,34 @@ def test_bad_id_format_fails():
     r = run_validate(FIXTURES / "invalid" / "bad-id-format.md")
     assert r.returncode != 0
     assert "id" in r.stderr.lower()
+
+
+def test_tier_dir_mismatch_fails():
+    r = run_validate(
+        FIXTURES / "invalid" / "tier-dir-mismatch" / "live" / "journal"
+        / "2026-04-17-labeled-canon.md"
+    )
+    assert r.returncode != 0
+    assert "tier" in r.stderr.lower() or "directory" in r.stderr.lower()
+
+
+def test_filename_id_mismatch_fails():
+    r = run_validate(FIXTURES / "invalid" / "filename-id-mismatch.md")
+    assert r.returncode != 0
+    assert "filename" in r.stderr.lower() or "stem" in r.stderr.lower()
+
+
+def test_bad_date_gives_clean_error_not_traceback():
+    # Feb 30 is invalid; PyYAML raises ValueError. validate.py should
+    # emit a clean ERROR message and exit non-zero without a Python traceback.
+    r = run_validate(FIXTURES / "invalid" / "bad-date-feb-30.md")
+    assert r.returncode != 0
+    assert "Traceback" not in r.stderr
+    assert "date" in r.stderr.lower() or "yaml" in r.stderr.lower()
+
+
+def test_file_not_found_gives_clean_error():
+    r = run_validate(FIXTURES / "does-not-exist.md")
+    assert r.returncode != 0
+    assert "Traceback" not in r.stderr
+    assert "not found" in r.stderr.lower() or "no such" in r.stderr.lower()
