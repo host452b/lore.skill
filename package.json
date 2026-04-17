@@ -1,0 +1,25 @@
+{
+  "name": "lore",
+  "version": "0.1.0",
+  "description": "Turn your project's lived history into structured, cross-referenced, git-tracked memory. Timeline · checkpoint · recall · lore · legacy.",
+  "type": "module",
+  "license": "MIT",
+  "author": {
+    "name": "Joe Jiang",
+    "email": "joejiang@nvidia.com"
+  },
+  "homepage": "https://github.com/host452b/lore.skill",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/host452b/lore.skill.git"
+  },
+  "keywords": [
+    "skills",
+    "changelog",
+    "adr",
+    "project-memory",
+    "dead-ends",
+    "try-failed-exp",
+    "knowledge-management"
+  ]
+}
