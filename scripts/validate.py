@@ -106,6 +106,29 @@ def body_has_heading(body: str, heading_text: str) -> bool:
     return False
 
 
+def apply_profile_fields(profile_data: dict, fm: dict, errors: list) -> None:
+    """Enforce a profile YAML's `fields:` block against frontmatter.
+
+    For each field declared in profile_data['fields']:
+      - If required and missing from frontmatter, emit an error.
+      - Enum-type value check lands in Task 5.
+
+    Unsupported types are silently skipped for forward compatibility.
+    """
+    fields_decl = profile_data.get("fields") or {}
+    for field_name, field_spec in fields_decl.items():
+        if not isinstance(field_spec, dict):
+            continue
+        required = bool(field_spec.get("required"))
+        if required and field_name not in fm:
+            errors.append(
+                f"profile requires field {field_name!r} "
+                f"(declared in profile fields:); missing from frontmatter"
+            )
+            continue
+        # Enum-type checks land in Task 5
+
+
 def load_frontmatter(path: Path) -> dict:
     try:
         text = path.read_text(encoding="utf-8")
@@ -262,10 +285,13 @@ def validate(path: Path, fm: dict) -> list[str]:
             )
         # Profile existence (reuses Spec 2's load_profile helper)
         if "profile" in fm:
+            profile_data = None
             try:
-                load_profile("journal", str(fm["profile"]))
+                profile_data = load_profile("journal", str(fm["profile"]))
             except ValidationError as e:
                 errors.append(str(e))
+            if profile_data is not None:
+                apply_profile_fields(profile_data, fm, errors)
         # Live-tier immutability: journal records must not supersede or be superseded
         if "superseded_by" in fm:
             errors.append(

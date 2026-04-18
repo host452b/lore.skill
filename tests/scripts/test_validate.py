@@ -148,3 +148,9 @@ def test_journal_with_superseded_by_fails():
     r = run_validate(FIXTURES / "invalid" / "2026-04-17-journal-with-superseded-by.md")
     assert r.returncode != 0
     assert "immutable" in r.stderr.lower() or "superseded_by" in r.stderr.lower()
+
+
+def test_journal_missing_event_type_fails():
+    r = run_validate(FIXTURES / "invalid" / "2026-04-17-journal-missing-event-type.md")
+    assert r.returncode != 0
+    assert "event-type" in r.stderr.lower()
