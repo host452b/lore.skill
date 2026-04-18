@@ -22,6 +22,13 @@ TIERS = frozenset({"live", "archive", "canon"})
 
 TFE_STATUS = frozenset({"rejected", "on-hold", "reassessed"})
 
+EVENT_TIME_RE = re.compile(
+    r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?([+-]\d{2}:\d{2}|Z)?$"
+)
+JOURNAL_OUTCOME = frozenset(
+    {"succeeded", "failed", "partial", "rolled-back", "observed"}
+)
+
 ID_RE = re.compile(r"^\d{4}-\d{2}-\d{2}-[a-z0-9][a-z0-9-]{1,60}$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 CROSS_REF_RE = re.compile(r"^\[\[[a-z][a-z-]*:\d{4}-\d{2}-\d{2}-[a-z0-9][a-z0-9-]{1,60}\]\]$")
@@ -227,6 +234,32 @@ def validate(path: Path, fm: dict) -> list[str]:
                 "try-failed-exp with status='reassessed' must also set "
                 "'superseded_by' pointing at the overturning record"
             )
+
+    # Archetype-specific rules: journal
+    if fm.get("type") == "journal":
+        if "profile" not in fm:
+            errors.append("journal records require a 'profile' field")
+        if "event-time" not in fm:
+            errors.append("journal records require an 'event-time' field")
+        elif not EVENT_TIME_RE.match(str(fm["event-time"])):
+            errors.append(
+                f"event-time must be ISO 8601 "
+                f"(YYYY-MM-DDTHH:MM[:SS][Z|±HH:MM]); "
+                f"got {fm['event-time']!r}"
+            )
+        if "outcome" not in fm:
+            errors.append("journal records require an 'outcome' field")
+        elif fm["outcome"] not in JOURNAL_OUTCOME:
+            errors.append(
+                f"journal outcome must be one of {sorted(JOURNAL_OUTCOME)}; "
+                f"got {fm['outcome']!r}"
+            )
+        # Profile existence (reuses Spec 2's load_profile helper)
+        if "profile" in fm:
+            try:
+                load_profile("journal", str(fm["profile"]))
+            except ValidationError as e:
+                errors.append(str(e))
 
     return errors
 

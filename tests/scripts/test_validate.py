@@ -119,3 +119,21 @@ def test_tfe_dogfood_still_passes():
         / "2026-04-17-no-runtime-plugin-system.md"
     r = run_validate(dogfood)
     assert r.returncode == 0, r.stderr
+
+
+def test_journal_missing_event_time_fails():
+    r = run_validate(FIXTURES / "invalid" / "2026-04-17-journal-missing-event-time.md")
+    assert r.returncode != 0
+    assert "event-time" in r.stderr.lower()
+
+
+def test_journal_bad_event_time_fails():
+    r = run_validate(FIXTURES / "invalid" / "2026-04-17-journal-bad-event-time.md")
+    assert r.returncode != 0
+    assert "event-time" in r.stderr.lower() or "iso" in r.stderr.lower()
+
+
+def test_journal_bad_outcome_fails():
+    r = run_validate(FIXTURES / "invalid" / "2026-04-17-journal-bad-outcome.md")
+    assert r.returncode != 0
+    assert "outcome" in r.stderr.lower()
