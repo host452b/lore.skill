@@ -62,15 +62,34 @@ def body_has_heading(body: str, heading_text: str) -> bool:
     (after '## ' and optional whitespace) matches heading_text exactly,
     case-insensitive, AND the heading is followed by at least one
     non-blank, non-heading line of content.
+
+    Lines inside fenced code blocks (```...```) are ignored.
     """
     lines = body.splitlines()
     target = heading_text.strip().lower()
+    in_fence = False
     for i, line in enumerate(lines):
         stripped = line.strip()
+        if stripped.startswith("```"):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
         if stripped.lower() == f"## {target}":
             # Look for at least one non-blank, non-## line after this one.
+            # Must also ignore lines inside fenced code blocks in the content region.
+            follow_in_fence = False
             for follow in lines[i + 1:]:
                 fs = follow.strip()
+                if fs.startswith("```"):
+                    follow_in_fence = not follow_in_fence
+                    # A fence-start line counts as non-blank non-heading content.
+                    if not follow_in_fence:
+                        # This was a fence close; keep scanning
+                        continue
+                    return True  # Fence-open as first content = valid
+                if follow_in_fence:
+                    continue
                 if not fs:
                     continue
                 if fs.startswith("##"):
@@ -163,6 +182,8 @@ def validate(path: Path, fm: dict) -> list[str]:
 
     # Archetype-specific rules: try-failed-exp
     if fm.get("type") == "try-failed-exp":
+        # Pre-compute body once for all heading checks below.
+        body = None  # Lazily loaded only if needed
         if "profile" not in fm:
             errors.append("try-failed-exp records require a 'profile' field")
         if "status" not in fm:
@@ -172,7 +193,6 @@ def validate(path: Path, fm: dict) -> list[str]:
                 f"try-failed-exp status must be one of {sorted(TFE_STATUS)}; "
                 f"got {fm['status']!r}"
             )
-        # Profile must resolve to a real file under skills/try-failed-exp/profiles/
         if "profile" in fm:
             profile_data = None
             try:
@@ -181,28 +201,26 @@ def validate(path: Path, fm: dict) -> list[str]:
                 errors.append(str(e))
             if profile_data is not None:
                 required = profile_data.get("required_sections") or []
-                body = load_body(path)
-                for section in required:
-                    # Each entry looks like "## What was considered".
-                    # Strip the leading "## " for body_has_heading.
-                    heading = str(section).strip()
-                    if heading.startswith("## "):
-                        heading = heading[3:]
-                    if not body_has_heading(body, heading):
-                        errors.append(
-                            f"profile {fm['profile']!r} requires "
-                            f"'## {heading}' section (profile required_sections); "
-                            f"missing from body"
-                        )
-
-        # Archetype-level body requirement: "## Don't retry unless"
-        body = load_body(path)
+                if required:
+                    body = load_body(path)
+                    for section in required:
+                        heading = str(section).strip()
+                        if heading.startswith("## "):
+                            heading = heading[3:]
+                        if not body_has_heading(body, heading):
+                            errors.append(
+                                f"profile {fm['profile']!r} requires "
+                                f"'## {heading}' section (profile required_sections); "
+                                f"missing from body"
+                            )
+        # Archetype-level: '## Don't retry unless'
+        if body is None:
+            body = load_body(path)
         if not body_has_heading(body, "Don't retry unless"):
             errors.append(
                 "try-failed-exp records must contain a "
                 "'## Don't retry unless' section with at least one line of content"
             )
-
         # status: reassessed must be paired with superseded_by
         if fm.get("status") == "reassessed" and "superseded_by" not in fm:
             errors.append(

@@ -99,3 +99,9 @@ def test_tfe_reassessed_without_superseded_by_fails():
     r = run_validate(FIXTURES / "invalid" / "2026-04-17-reassessed-orphan.md")
     assert r.returncode != 0
     assert "superseded_by" in r.stderr.lower() or "reassessed" in r.stderr.lower()
+
+
+def test_tfe_dont_retry_unless_inside_fence_fails():
+    r = run_validate(FIXTURES / "invalid" / "2026-04-17-dru-inside-fence.md")
+    assert r.returncode != 0
+    assert "don't retry unless" in r.stderr.lower() or "retry" in r.stderr.lower()
