@@ -266,6 +266,17 @@ def validate(path: Path, fm: dict) -> list[str]:
                 load_profile("journal", str(fm["profile"]))
             except ValidationError as e:
                 errors.append(str(e))
+        # Live-tier immutability: journal records must not supersede or be superseded
+        if "superseded_by" in fm:
+            errors.append(
+                "journal records are immutable; 'superseded_by' not permitted "
+                "on live-tier events"
+            )
+        if "supersedes" in fm:
+            errors.append(
+                "journal records are immutable; 'supersedes' not permitted "
+                "on live-tier events"
+            )
 
     return errors
 

@@ -143,3 +143,8 @@ def test_journal_unquoted_event_time_passes():
     # Regression guard for PyYAML datetime auto-coercion.
     r = run_validate(FIXTURES / "valid" / "2026-04-17-journal-unquoted-event-time.md")
     assert r.returncode == 0, r.stderr
+
+def test_journal_with_superseded_by_fails():
+    r = run_validate(FIXTURES / "invalid" / "2026-04-17-journal-with-superseded-by.md")
+    assert r.returncode != 0
+    assert "immutable" in r.stderr.lower() or "superseded_by" in r.stderr.lower()
