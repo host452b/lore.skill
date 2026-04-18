@@ -105,3 +105,17 @@ def test_tfe_dont_retry_unless_inside_fence_fails():
     r = run_validate(FIXTURES / "invalid" / "2026-04-17-dru-inside-fence.md")
     assert r.returncode != 0
     assert "don't retry unless" in r.stderr.lower() or "retry" in r.stderr.lower()
+
+
+def test_tfe_example_rejected_redis_cluster_passes():
+    r = run_validate(FIXTURES / "valid" / "2026-03-12-rejected-redis-cluster.md")
+    assert r.returncode == 0, r.stderr
+
+
+def test_tfe_dogfood_still_passes():
+    """The dogfood record written in Spec 1 before the archetype formally
+    existed must still validate under the profile-aware rules."""
+    dogfood = REPO_ROOT / ".lore" / "canon" / "try-failed-exp" \
+        / "2026-04-17-no-runtime-plugin-system.md"
+    r = run_validate(dogfood)
+    assert r.returncode == 0, r.stderr
