@@ -1,0 +1,10 @@
+name: git-commit
+extends: journal
+description: Journal entry auto-generated from a git commit during harvest.
+  Minimal required fields — no event-type or environment required.
+  Upgrade to the web-service profile post-harvest to add those constraints.
+
+# No fields: block — no extra required frontmatter beyond the archetype
+# minimum (event-time, outcome, profile).
+
+# No required_sections — journal body is free-form narrative.

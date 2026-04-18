@@ -1,0 +1,10 @@
+name: revert-commit
+extends: try-failed-exp
+description: A try-failed-exp entry auto-generated from a git revert commit.
+  Captures what was attempted and immediately rolled back.
+
+required_sections:
+  - "## What was reverted"
+  - "## Why reverted"
+  # Note: "## Don't retry unless" is enforced at the archetype level for all
+  # try-failed-exp records regardless of profile.

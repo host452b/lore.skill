@@ -18,3 +18,6 @@ node_modules/
 # Test artifacts
 .pytest_cache/
 .coverage
+
+# Lore harvest staging area (ephemeral drafts — never committed)
+.lore/.harvest/*.md
