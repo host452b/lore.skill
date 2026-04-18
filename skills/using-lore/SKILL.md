@@ -46,9 +46,9 @@ Information phase-transitions cold-ward over time. `lore:promote` operates the p
 
 **Meta (automation glue):**
 
-- `lore:detect` — first-run project scan, suggests starter archetypes
-- `lore:harvest` — batch-import candidate records from git/issues/external sources
-- `lore:promote` — cooling-pipeline operator *(v0.2)*
+- `lore:detect` — first-run project scan + ambient signal detection
+- `lore:harvest` — batch-review candidate records staged from git history
+- `lore:promote` — cooling-pipeline operator: surfaces live→canon promotion candidates
 - `lore:link`, `lore:audit`, `lore:migrate` *(later)*
 
 ## When to proactively invoke lore
