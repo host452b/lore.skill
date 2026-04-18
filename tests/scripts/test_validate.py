@@ -160,3 +160,13 @@ def test_journal_bad_environment_fails():
     r = run_validate(FIXTURES / "invalid" / "2026-04-17-journal-bad-environment.md")
     assert r.returncode != 0
     assert "environment" in r.stderr.lower()
+
+
+def test_journal_deploy_example_passes():
+    r = run_validate(FIXTURES / "valid" / "2026-04-15-deploy-v1-3-2.md")
+    assert r.returncode == 0, r.stderr
+
+
+def test_journal_incident_example_passes():
+    r = run_validate(FIXTURES / "valid" / "2026-04-08-payment-api-incident.md")
+    assert r.returncode == 0, r.stderr
