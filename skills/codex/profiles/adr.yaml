@@ -1,0 +1,24 @@
+name: adr
+extends: codex
+description: Michael Nygard-style Architecture Decision Record. Captures the
+  context for a decision, the decision itself, and the consequences.
+
+# Profile-declared frontmatter fields (Spec 3's `fields:` mechanism).
+fields:
+  status:
+    type: enum
+    values: [proposed, accepted, superseded, deprecated]
+    required: true
+
+# Profile-declared required body sections (Spec 2's mechanism).
+required_sections:
+  - "## Context"
+  - "## Decision"
+  - "## Consequences"
+
+template: templates/adr.md
+
+detect:
+  suggest-when:
+    - files-exist: ["docs/adr/", "docs/architecture/", "docs/decisions/"]
+    - has-dependency: ["@nygard/adr-tools"]
