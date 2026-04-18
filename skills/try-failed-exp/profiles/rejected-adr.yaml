@@ -1,0 +1,20 @@
+name: rejected-adr
+extends: try-failed-exp
+description: ADR-style record of an option considered but not adopted. Lists
+  what was on the table, why it was ruled out, what was chosen instead, and
+  the condition that would justify revisiting.
+
+# Body sections the validator enforces (as `## ` headings).
+# "## Don't retry unless" is required at the archetype level for every
+# try-failed-exp record regardless of profile and is NOT repeated here.
+required_sections:
+  - "## What was considered"
+  - "## Why it was rejected"
+  - "## What was chosen instead"
+
+template: templates/rejected-adr.md
+
+detect:
+  suggest-when:
+    - files-exist: ["docs/adr/", "docs/architecture/", "docs/decisions/"]
+    - has-dependency: ["@nygard/adr-tools"]
