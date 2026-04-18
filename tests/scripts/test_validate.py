@@ -84,3 +84,8 @@ def test_tfe_unknown_profile_fails():
     assert r.returncode != 0
     assert "profile" in r.stderr.lower()
     assert "nonexistent" in r.stderr.lower() or "not found" in r.stderr.lower()
+
+def test_tfe_missing_dont_retry_unless_fails():
+    r = run_validate(FIXTURES / "invalid" / "2026-04-17-missing-dru.md")
+    assert r.returncode != 0
+    assert "don't retry unless" in r.stderr.lower() or "retry" in r.stderr.lower()

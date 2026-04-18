@@ -46,6 +46,40 @@ def load_profile(archetype: str, profile_name: str) -> dict:
         raise ValidationError(f"profile {profile_path}: YAML parse error: {e}")
 
 
+def load_body(path: Path) -> str:
+    """Return the markdown body (everything after the closing frontmatter delimiter)."""
+    text = path.read_text(encoding="utf-8")
+    if not text.startswith("---\n"):
+        return text
+    end = text.find("\n---\n", 4)
+    if end < 0:
+        return ""
+    return text[end + 5:]
+
+
+def body_has_heading(body: str, heading_text: str) -> bool:
+    """Return True iff the body contains a level-2 heading whose text
+    (after '## ' and optional whitespace) matches heading_text exactly,
+    case-insensitive, AND the heading is followed by at least one
+    non-blank, non-heading line of content.
+    """
+    lines = body.splitlines()
+    target = heading_text.strip().lower()
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+        if stripped.lower() == f"## {target}":
+            # Look for at least one non-blank, non-## line after this one.
+            for follow in lines[i + 1:]:
+                fs = follow.strip()
+                if not fs:
+                    continue
+                if fs.startswith("##"):
+                    return False  # Next heading hit with no content between
+                return True
+            return False
+    return False
+
+
 def load_frontmatter(path: Path) -> dict:
     try:
         text = path.read_text(encoding="utf-8")
@@ -144,6 +178,14 @@ def validate(path: Path, fm: dict) -> list[str]:
                 load_profile("try-failed-exp", str(fm["profile"]))
             except ValidationError as e:
                 errors.append(str(e))
+
+        # Archetype-level body requirement: "## Don't retry unless"
+        body = load_body(path)
+        if not body_has_heading(body, "Don't retry unless"):
+            errors.append(
+                "try-failed-exp records must contain a "
+                "'## Don't retry unless' section with at least one line of content"
+            )
 
     return errors
 
