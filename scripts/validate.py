@@ -9,6 +9,9 @@ from pathlib import Path
 
 import yaml
 
+# Plugin root for profile lookup. This file is at <plugin-root>/scripts/validate.py.
+PLUGIN_ROOT = Path(__file__).resolve().parent.parent
+
 ARCHETYPES = frozenset({
     "journal", "codex", "try-failed-exp", "postmortem", "retro",
     "intent-log", "deprecation-tracker", "migration-guide",
@@ -26,6 +29,21 @@ CROSS_REF_RE = re.compile(r"^\[\[[a-z][a-z-]*:\d{4}-\d{2}-\d{2}-[a-z0-9][a-z0-9-
 
 class ValidationError(Exception):
     pass
+
+
+def load_profile(archetype: str, profile_name: str) -> dict:
+    """Load a profile YAML for the given archetype. Raises ValidationError if not found."""
+    profile_path = PLUGIN_ROOT / "skills" / archetype / "profiles" / f"{profile_name}.yaml"
+    if not profile_path.exists():
+        raise ValidationError(
+            f"profile {profile_name!r} not found at {profile_path} "
+            f"(archetype: {archetype!r})"
+        )
+    try:
+        with profile_path.open("r", encoding="utf-8") as f:
+            return yaml.safe_load(f) or {}
+    except yaml.YAMLError as e:
+        raise ValidationError(f"profile {profile_path}: YAML parse error: {e}")
 
 
 def load_frontmatter(path: Path) -> dict:
@@ -120,6 +138,12 @@ def validate(path: Path, fm: dict) -> list[str]:
                 f"try-failed-exp status must be one of {sorted(TFE_STATUS)}; "
                 f"got {fm['status']!r}"
             )
+        # Profile must resolve to a real file under skills/try-failed-exp/profiles/
+        if "profile" in fm:
+            try:
+                load_profile("try-failed-exp", str(fm["profile"]))
+            except ValidationError as e:
+                errors.append(str(e))
 
     return errors
 

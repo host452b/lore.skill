@@ -78,3 +78,9 @@ def test_tfe_bad_status_fails():
     r = run_validate(FIXTURES / "invalid" / "2026-04-17-bad-status-tfe.md")
     assert r.returncode != 0
     assert "status" in r.stderr.lower()
+
+def test_tfe_unknown_profile_fails():
+    r = run_validate(FIXTURES / "invalid" / "2026-04-17-unknown-profile.md")
+    assert r.returncode != 0
+    assert "profile" in r.stderr.lower()
+    assert "nonexistent" in r.stderr.lower() or "not found" in r.stderr.lower()
