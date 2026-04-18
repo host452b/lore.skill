@@ -52,12 +52,20 @@ Search **"lore"** in the plugin marketplace, or add manually:
 /add-plugin lore
 ```
 
-### Manual (any platform)
+### Manual / npx (any platform)
 
 ```bash
 # In your project root
+npx github:host452b/lore.skill init
+```
+
+Or via the one-liner:
+
+```bash
 curl -fsSL https://raw.githubusercontent.com/host452b/lore.skill/main/install.sh | bash
 ```
+
+Installs into `.claude/` (hooks, skills, scripts) and creates `.lore/` record store.
 
 Codex, OpenCode, and Gemini CLI install shims land in v0.2.
 
@@ -147,12 +155,20 @@ intent-log          retro                  try-failed-exp
 /add-plugin lore
 ```
 
-### 手动安装（任意平台）
+### 手动安装 / npx（任意平台）
 
 ```bash
 # 在项目根目录执行
+npx github:host452b/lore.skill init
+```
+
+或一键安装脚本：
+
+```bash
 curl -fsSL https://raw.githubusercontent.com/host452b/lore.skill/main/install.sh | bash
 ```
+
+安装内容：`.claude/`（hooks、skills、scripts）+ `.lore/` 记录存储目录。
 
 Codex、OpenCode、Gemini CLI 的安装适配器将在 v0.2 中提供。
 

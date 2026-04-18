@@ -12,6 +12,15 @@
     "type": "git",
     "url": "https://github.com/host452b/lore.skill.git"
   },
+  "bin": {
+    "lore": "bin/lore.js"
+  },
+  "files": [
+    "bin/",
+    "hooks/",
+    "scripts/",
+    "skills/"
+  ],
   "keywords": [
     "skills",
     "changelog",
