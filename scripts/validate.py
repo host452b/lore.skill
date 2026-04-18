@@ -241,12 +241,18 @@ def validate(path: Path, fm: dict) -> list[str]:
             errors.append("journal records require a 'profile' field")
         if "event-time" not in fm:
             errors.append("journal records require an 'event-time' field")
-        elif not EVENT_TIME_RE.match(str(fm["event-time"])):
-            errors.append(
-                f"event-time must be ISO 8601 "
-                f"(YYYY-MM-DDTHH:MM[:SS][Z|±HH:MM]); "
-                f"got {fm['event-time']!r}"
-            )
+        else:
+            ev = fm["event-time"]
+            # PyYAML auto-parses unquoted ISO timestamps into datetime objects.
+            # Normalize: if it has isoformat(), use that (yields the T form);
+            # otherwise stringify and check as-is.
+            ev_str = ev.isoformat() if hasattr(ev, "isoformat") else str(ev)
+            if not EVENT_TIME_RE.match(ev_str):
+                errors.append(
+                    f"event-time must be ISO 8601 "
+                    f"(YYYY-MM-DDTHH:MM[:SS][Z|±HH:MM]); "
+                    f"got {fm['event-time']!r}"
+                )
         if "outcome" not in fm:
             errors.append("journal records require an 'outcome' field")
         elif fm["outcome"] not in JOURNAL_OUTCOME:

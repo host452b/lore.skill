@@ -137,3 +137,9 @@ def test_journal_bad_outcome_fails():
     r = run_validate(FIXTURES / "invalid" / "2026-04-17-journal-bad-outcome.md")
     assert r.returncode != 0
     assert "outcome" in r.stderr.lower()
+
+
+def test_journal_unquoted_event_time_passes():
+    # Regression guard for PyYAML datetime auto-coercion.
+    r = run_validate(FIXTURES / "valid" / "2026-04-17-journal-unquoted-event-time.md")
+    assert r.returncode == 0, r.stderr
