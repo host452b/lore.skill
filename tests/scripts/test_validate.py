@@ -194,3 +194,8 @@ def test_codex_superseded_without_superseded_by_fails():
     r = run_validate(FIXTURES / "invalid" / "2026-04-17-codex-superseded-without-superseded-by.md")
     assert r.returncode != 0
     assert "superseded" in r.stderr.lower()
+
+
+def test_codex_example_postgres_primary_passes():
+    r = run_validate(FIXTURES / "valid" / "2026-03-15-postgres-primary-session-store.md")
+    assert r.returncode == 0, r.stderr
