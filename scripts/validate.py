@@ -340,6 +340,12 @@ def validate(path: Path, fm: dict) -> list[str]:
                                 f"'## {heading}' section (profile required_sections); "
                                 f"missing from body"
                             )
+        # status: superseded must be paired with superseded_by
+        if fm.get("status") == "superseded" and "superseded_by" not in fm:
+            errors.append(
+                "codex with status='superseded' must also set 'superseded_by' "
+                "pointing at the overturning record"
+            )
 
     return errors
 

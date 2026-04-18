@@ -188,3 +188,9 @@ def test_codex_missing_decision_fails():
     r = run_validate(FIXTURES / "invalid" / "2026-04-17-codex-missing-decision.md")
     assert r.returncode != 0
     assert "decision" in r.stderr.lower() or "section" in r.stderr.lower()
+
+
+def test_codex_superseded_without_superseded_by_fails():
+    r = run_validate(FIXTURES / "invalid" / "2026-04-17-codex-superseded-without-superseded-by.md")
+    assert r.returncode != 0
+    assert "superseded" in r.stderr.lower()
