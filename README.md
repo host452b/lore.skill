@@ -85,6 +85,8 @@ Git-tracked by default. Your lore ships with your repo.
 
 ## Design
 
+[PHILOSOPHY.md](PHILOSOPHY.md) — the thesis, the cooling pipeline, why try-failed-exp is the anchor, and what lore is not optimizing for.
+
 Full architectural charter: [`docs/superpowers/specs/2026-04-17-lore-charter-design.md`](docs/superpowers/specs/2026-04-17-lore-charter-design.md)
 
 Covers: cooling-pipeline thesis · 11 archetype skills · 5-layer architecture · install architecture · roadmap v0.1 → v1.0.
@@ -177,6 +179,8 @@ Codex、OpenCode、Gemini CLI 的安装适配器将在 v0.2 中提供。
 默认纳入 git 追踪，lore 记录随代码仓库一起分发。
 
 ## 设计文档
+
+[PHILOSOPHY.md](PHILOSOPHY.md) — 核心论点、冷却管道、为什么 try-failed-exp 是锚点、Lore 不优化的东西。
 
 完整架构 Charter：[`docs/superpowers/specs/2026-04-17-lore-charter-design.md`](docs/superpowers/specs/2026-04-17-lore-charter-design.md)
 
