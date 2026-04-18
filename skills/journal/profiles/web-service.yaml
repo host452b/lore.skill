@@ -1,0 +1,26 @@
+name: web-service
+extends: journal
+description: Events from running a web service — deploys, incidents, rollbacks,
+  release cuts, migrations, CI failures. Scoped to a deployed environment.
+
+# Profile-declared frontmatter fields (Spec 3's new `fields:` mechanism).
+# Added to the archetype's own required fields (event-time, outcome, profile).
+fields:
+  event-type:
+    type: enum
+    values: [deploy, incident, rollback, release, migration, ci-failure]
+    required: true
+  environment:
+    type: enum
+    values: [prod, staging, dev, test]
+    required: true
+
+# No required_sections: journal body is free-form narrative.
+
+template: templates/web-service.md
+
+detect:
+  suggest-when:
+    - files-exist: ["package.json", "Dockerfile", "docker-compose.yml"]
+    - files-exist: [".github/workflows/"]
+    - has-dependency: ["express", "fastify", "django", "flask", "rails"]
