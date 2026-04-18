@@ -17,6 +17,8 @@ ARCHETYPES = frozenset({
 
 TIERS = frozenset({"live", "archive", "canon"})
 
+TFE_STATUS = frozenset({"rejected", "on-hold", "reassessed"})
+
 ID_RE = re.compile(r"^\d{4}-\d{2}-\d{2}-[a-z0-9][a-z0-9-]{1,60}$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 CROSS_REF_RE = re.compile(r"^\[\[[a-z][a-z-]*:\d{4}-\d{2}-\d{2}-[a-z0-9][a-z0-9-]{1,60}\]\]$")
@@ -106,6 +108,18 @@ def validate(path: Path, fm: dict) -> list[str]:
                     f"tier/directory mismatch: frontmatter says tier={fm['tier']!r} "
                     f"but path locates record under .lore/{tier_segment}/"
                 )
+
+    # Archetype-specific rules: try-failed-exp
+    if fm.get("type") == "try-failed-exp":
+        if "profile" not in fm:
+            errors.append("try-failed-exp records require a 'profile' field")
+        if "status" not in fm:
+            errors.append("try-failed-exp records require a 'status' field")
+        elif fm["status"] not in TFE_STATUS:
+            errors.append(
+                f"try-failed-exp status must be one of {sorted(TFE_STATUS)}; "
+                f"got {fm['status']!r}"
+            )
 
     return errors
 

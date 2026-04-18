@@ -73,3 +73,8 @@ def test_file_not_found_gives_clean_error():
     assert r.returncode != 0
     assert "Traceback" not in r.stderr
     assert "not found" in r.stderr.lower() or "no such" in r.stderr.lower()
+
+def test_tfe_bad_status_fails():
+    r = run_validate(FIXTURES / "invalid" / "2026-04-17-bad-status-tfe.md")
+    assert r.returncode != 0
+    assert "status" in r.stderr.lower()
