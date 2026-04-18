@@ -170,3 +170,21 @@ def test_journal_deploy_example_passes():
 def test_journal_incident_example_passes():
     r = run_validate(FIXTURES / "valid" / "2026-04-08-payment-api-incident.md")
     assert r.returncode == 0, r.stderr
+
+
+def test_codex_missing_status_fails():
+    r = run_validate(FIXTURES / "invalid" / "2026-04-17-codex-missing-status.md")
+    assert r.returncode != 0
+    assert "status" in r.stderr.lower()
+
+
+def test_codex_bad_status_fails():
+    r = run_validate(FIXTURES / "invalid" / "2026-04-17-codex-bad-status.md")
+    assert r.returncode != 0
+    assert "status" in r.stderr.lower()
+
+
+def test_codex_missing_decision_fails():
+    r = run_validate(FIXTURES / "invalid" / "2026-04-17-codex-missing-decision.md")
+    assert r.returncode != 0
+    assert "decision" in r.stderr.lower() or "section" in r.stderr.lower()

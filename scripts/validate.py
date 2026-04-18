@@ -314,6 +314,33 @@ def validate(path: Path, fm: dict) -> list[str]:
                 "on live-tier events"
             )
 
+    # Archetype-specific rules: codex
+    if fm.get("type") == "codex":
+        if "profile" not in fm:
+            errors.append("codex records require a 'profile' field")
+        # Profile existence + fields + required_sections (reuses Specs 2+3 helpers)
+        if "profile" in fm:
+            profile_data = None
+            try:
+                profile_data = load_profile("codex", str(fm["profile"]))
+            except ValidationError as e:
+                errors.append(str(e))
+            if profile_data is not None:
+                apply_profile_fields(profile_data, fm, errors)
+                required = profile_data.get("required_sections") or []
+                if required:
+                    body = load_body(path)
+                    for section in required:
+                        heading = str(section).strip()
+                        if heading.startswith("## "):
+                            heading = heading[3:]
+                        if not body_has_heading(body, heading):
+                            errors.append(
+                                f"profile {fm['profile']!r} requires "
+                                f"'## {heading}' section (profile required_sections); "
+                                f"missing from body"
+                            )
+
     return errors
 
 
