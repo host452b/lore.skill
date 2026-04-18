@@ -94,3 +94,8 @@ def test_tfe_missing_what_was_chosen_instead_fails():
     r = run_validate(FIXTURES / "invalid" / "2026-04-17-missing-chosen.md")
     assert r.returncode != 0
     assert "what was chosen instead" in r.stderr.lower() or "section" in r.stderr.lower()
+
+def test_tfe_reassessed_without_superseded_by_fails():
+    r = run_validate(FIXTURES / "invalid" / "2026-04-17-reassessed-orphan.md")
+    assert r.returncode != 0
+    assert "superseded_by" in r.stderr.lower() or "reassessed" in r.stderr.lower()

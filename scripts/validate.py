@@ -203,6 +203,13 @@ def validate(path: Path, fm: dict) -> list[str]:
                 "'## Don't retry unless' section with at least one line of content"
             )
 
+        # status: reassessed must be paired with superseded_by
+        if fm.get("status") == "reassessed" and "superseded_by" not in fm:
+            errors.append(
+                "try-failed-exp with status='reassessed' must also set "
+                "'superseded_by' pointing at the overturning record"
+            )
+
     return errors
 
 
