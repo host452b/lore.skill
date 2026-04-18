@@ -111,7 +111,7 @@ def apply_profile_fields(profile_data: dict, fm: dict, errors: list) -> None:
 
     For each field declared in profile_data['fields']:
       - If required and missing from frontmatter, emit an error.
-      - Enum-type value check lands in Task 5.
+      - If present and declared type is 'enum', verify the value is in `values`.
 
     Unsupported types are silently skipped for forward compatibility.
     """
@@ -120,13 +120,23 @@ def apply_profile_fields(profile_data: dict, fm: dict, errors: list) -> None:
         if not isinstance(field_spec, dict):
             continue
         required = bool(field_spec.get("required"))
-        if required and field_name not in fm:
-            errors.append(
-                f"profile requires field {field_name!r} "
-                f"(declared in profile fields:); missing from frontmatter"
-            )
+        if field_name not in fm:
+            if required:
+                errors.append(
+                    f"profile requires field {field_name!r} "
+                    f"(declared in profile fields:); missing from frontmatter"
+                )
             continue
-        # Enum-type checks land in Task 5
+        value = fm[field_name]
+        ftype = field_spec.get("type")
+        if ftype == "enum":
+            allowed = field_spec.get("values") or []
+            if value not in allowed:
+                errors.append(
+                    f"profile field {field_name!r} must be one of {allowed}; "
+                    f"got {value!r}"
+                )
+        # Other types (string, ref, markdown) are v0.2+
 
 
 def load_frontmatter(path: Path) -> dict:

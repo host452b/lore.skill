@@ -154,3 +154,9 @@ def test_journal_missing_event_type_fails():
     r = run_validate(FIXTURES / "invalid" / "2026-04-17-journal-missing-event-type.md")
     assert r.returncode != 0
     assert "event-type" in r.stderr.lower()
+
+
+def test_journal_bad_environment_fails():
+    r = run_validate(FIXTURES / "invalid" / "2026-04-17-journal-bad-environment.md")
+    assert r.returncode != 0
+    assert "environment" in r.stderr.lower()
