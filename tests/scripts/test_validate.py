@@ -89,3 +89,8 @@ def test_tfe_missing_dont_retry_unless_fails():
     r = run_validate(FIXTURES / "invalid" / "2026-04-17-missing-dru.md")
     assert r.returncode != 0
     assert "don't retry unless" in r.stderr.lower() or "retry" in r.stderr.lower()
+
+def test_tfe_missing_what_was_chosen_instead_fails():
+    r = run_validate(FIXTURES / "invalid" / "2026-04-17-missing-chosen.md")
+    assert r.returncode != 0
+    assert "what was chosen instead" in r.stderr.lower() or "section" in r.stderr.lower()

@@ -174,10 +174,26 @@ def validate(path: Path, fm: dict) -> list[str]:
             )
         # Profile must resolve to a real file under skills/try-failed-exp/profiles/
         if "profile" in fm:
+            profile_data = None
             try:
-                load_profile("try-failed-exp", str(fm["profile"]))
+                profile_data = load_profile("try-failed-exp", str(fm["profile"]))
             except ValidationError as e:
                 errors.append(str(e))
+            if profile_data is not None:
+                required = profile_data.get("required_sections") or []
+                body = load_body(path)
+                for section in required:
+                    # Each entry looks like "## What was considered".
+                    # Strip the leading "## " for body_has_heading.
+                    heading = str(section).strip()
+                    if heading.startswith("## "):
+                        heading = heading[3:]
+                    if not body_has_heading(body, heading):
+                        errors.append(
+                            f"profile {fm['profile']!r} requires "
+                            f"'## {heading}' section (profile required_sections); "
+                            f"missing from body"
+                        )
 
         # Archetype-level body requirement: "## Don't retry unless"
         body = load_body(path)
