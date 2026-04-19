@@ -6,7 +6,7 @@
 | **Date** | 2026-04-17 |
 | **Type** | Spec 3 — second archetype skill (first live-tier) |
 | **Scope** | `lore:journal` archetype, v0.1 profile `web-service`, validator extension for journal rules + profile-declared `fields:` mechanism |
-| **Author** | host452b \<\> |
+| **Author** | host452b |
 | **Depends on** | Spec 0 (charter), Spec 1 (core substrate), Spec 2 (try-failed-exp + profile-aware validator) — all on `main` at `5367843` |
 | **Defers** | `ml-experiment`, `spike`, `build-log` profiles (v0.3 per charter §5.1) |
 
@@ -329,7 +329,7 @@ type: journal
 tier: live
 date: 2026-04-15
 title: Deploy v1.3.2 to prod
-authors: ["host452b <>"]
+authors: ["host452b"]
 profile: web-service
 event-time: 2026-04-15T16:23:00+00:00
 event-type: deploy
@@ -357,7 +357,7 @@ type: journal
 tier: live
 date: 2026-04-08
 title: Payment API 5xx spike — incident and recovery
-authors: ["host452b <>"]
+authors: ["host452b"]
 profile: web-service
 event-time: 2026-04-08T09:14:00+00:00
 event-type: incident

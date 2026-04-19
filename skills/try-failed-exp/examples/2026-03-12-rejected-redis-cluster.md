@@ -4,7 +4,7 @@ type: try-failed-exp
 tier: canon
 date: 2026-03-12
 title: Redis Cluster as primary session store (rejected)
-authors: ["host452b <>"]
+authors: ["host452b"]
 profile: rejected-adr
 status: rejected
 refs: ["[[codex:2026-03-15-postgres-primary-session-store]]"]

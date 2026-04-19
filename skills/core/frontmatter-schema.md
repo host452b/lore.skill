@@ -11,7 +11,7 @@ Every `.lore/**/*.md` record has YAML frontmatter. The fields below are the cont
 | `tier` | enum | `live` \| `archive` \| `canon`. Must agree with the record's directory path. |
 | `date` | ISO date | `YYYY-MM-DD`. The record's *primary* date (decision / event / discovery), not wall-clock creation. |
 | `title` | string | Human-readable title; appears in indexes. |
-| `authors` | list\<string\> | Non-empty. Git-style identities: `"host452b <>"`. |
+| `authors` | list\<string\> | Non-empty. Git-style identities: `"host452b"`. |
 
 ## Optional fields
 
@@ -45,7 +45,7 @@ type: journal
 tier: live
 date: 2026-04-17
 title: First record
-authors: ["host452b <>"]
+authors: ["host452b"]
 ---
 ```
 
@@ -58,7 +58,7 @@ type: codex
 tier: canon
 date: 2026-04-17
 title: Postgres as primary DB
-authors: ["host452b <>"]
+authors: ["host452b"]
 profile: adr
 status: accepted
 refs: ["[[journal:2026-04-10-db-spike]]"]

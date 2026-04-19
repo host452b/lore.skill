@@ -6,7 +6,7 @@
 | **Date** | 2026-04-17 |
 | **Type** | Spec 6 — detect meta-skill |
 | **Scope** | `lore:detect` Layer-4 skill — first-run scan + ambient signal detection |
-| **Author** | host452b \<\> |
+| **Author** | host452b |
 | **Depends on** | Spec 0 (charter), Spec 1 (substrate), Specs 2-5 (archetypes + harvest) |
 | **Defers** | Automated pattern scoring, ML-assisted signal detection (v0.3+) |
 

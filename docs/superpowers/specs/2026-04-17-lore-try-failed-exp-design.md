@@ -6,7 +6,7 @@
 | **Date** | 2026-04-17 |
 | **Type** | Spec 2 — first archetype skill |
 | **Scope** | `lore:try-failed-exp` archetype, v0.1 profile `rejected-adr`, validator profile-awareness extension |
-| **Author** | host452b \<\> |
+| **Author** | host452b |
 | **Depends on** | Spec 0 (charter) and Spec 1 (core substrate + install), both merged to `main` at `e446e06` |
 | **Defers** | `spike-outcome`, `library-eval`, `perf-dead-end` profiles (v0.3 per charter §5.1) |
 
@@ -271,7 +271,7 @@ type: try-failed-exp
 tier: canon
 date: 2026-03-12
 title: Redis Cluster as primary session store (rejected)
-authors: ["host452b <>"]
+authors: ["host452b"]
 profile: rejected-adr
 status: rejected
 refs: ["[[codex:2026-03-15-postgres-primary-session-store]]"]

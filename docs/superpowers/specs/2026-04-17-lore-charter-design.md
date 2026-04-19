@@ -6,7 +6,7 @@
 | **Date** | 2026-04-17 |
 | **Type** | Architectural charter (Spec 0) |
 | **Scope** | Full `lore` plugin suite — all layers, all archetypes |
-| **Author** | host452b \<\> |
+| **Author** | host452b |
 | **Supersedes** | Working name `chronicle`; prior directory name `try-failed-log.skill` |
 
 ---

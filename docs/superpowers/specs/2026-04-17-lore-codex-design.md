@@ -6,7 +6,7 @@
 | **Date** | 2026-04-17 |
 | **Type** | Spec 4 — third archetype skill (second canon-tier) |
 | **Scope** | `lore:codex` archetype, v0.1 profile `adr`, validator extension for codex archetype rules (no new profile mechanism needed — reuses Spec 2 `required_sections` + Spec 3 `apply_profile_fields`) |
-| **Author** | host452b \<\> |
+| **Author** | host452b |
 | **Depends on** | Spec 0 (charter), Specs 1–3 all on `main` at `5cb83bf` |
 | **Defers** | `rfc`, `design-doc`, `readme-extended` profiles (v0.3 per charter §5.1) |
 
@@ -297,7 +297,7 @@ type: codex
 tier: canon
 date: 2026-03-15
 title: PostgreSQL as primary session store
-authors: ["host452b <>"]
+authors: ["host452b"]
 profile: adr
 status: accepted
 refs: ["[[try-failed-exp:2026-03-12-rejected-redis-cluster]]"]

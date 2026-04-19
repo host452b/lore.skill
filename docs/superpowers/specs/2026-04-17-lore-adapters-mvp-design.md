@@ -6,7 +6,7 @@
 | **Date** | 2026-04-17 |
 | **Type** | Spec 5 — adapters layer + harvest meta-skill |
 | **Scope** | `from-git-log` adapter (Layer-3) + `lore:harvest` meta-skill (Layer-4), v0.1 |
-| **Author** | host452b \<\> |
+| **Author** | host452b |
 | **Depends on** | Spec 0 (charter), Spec 1 (substrate), Spec 2 (try-failed-exp), Spec 3 (journal) |
 | **Defers** | `to-keep-a-changelog` outbound adapter (v0.2+); `postmortem`/`retro` harvest candidates (v0.2+) |
 

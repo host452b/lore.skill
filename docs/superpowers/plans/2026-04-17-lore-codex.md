@@ -444,7 +444,7 @@ type: codex
 tier: canon
 date: 2026-03-15
 title: PostgreSQL as primary session store
-authors: ["host452b <>"]
+authors: ["host452b"]
 profile: adr
 status: accepted
 refs: ["[[try-failed-exp:2026-03-12-rejected-redis-cluster]]"]

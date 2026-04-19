@@ -6,7 +6,7 @@
 | **Date** | 2026-04-17 |
 | **Type** | Spec 7 — promote meta-skill (v0.1 closeout) |
 | **Scope** | `lore:promote` Layer-4 skill — cooling-pipeline operator |
-| **Author** | host452b \<\> |
+| **Author** | host452b |
 | **Depends on** | Spec 0 (charter), Spec 1 (substrate), Specs 2-5 |
 | **Defers** | Automated scoring, cross-project promote (v0.3+) |
 

@@ -4,7 +4,7 @@ type: try-failed-exp
 tier: canon
 date: 2026-04-17
 title: Runtime plugin system for lore extensions (rejected)
-authors: ["host452b <>"]
+authors: ["host452b"]
 profile: rejected-adr
 status: rejected
 tags: ["architecture", "extensibility"]
